@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Transactional
@@ -22,20 +23,28 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
 
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
-     Set<String> defaultRoles =  Set.of("ROLE_ADMIN", "ROLE_USER");
-      createDefaultUserIfNotExits();
+        Set<String> defaultRoles = Set.of("ROLE_ADMIN", "ROLE_USER");
+
         createDefaultRoleIfNotExits(defaultRoles);
-       createDefaultAdminIfNotExits();
+        createDefaultUserIfNotExits();
+        createDefaultAdminIfNotExits();
     }
 
+    private void createDefaultUserIfNotExits() {
+        Optional<Role> userRoleOpt = roleRepository.findByName("ROLE_USER");
+        if (userRoleOpt.isEmpty()) {
+            System.err.println("ROLE_USER not found. Cannot create default users.");
+            return;
+        }
 
-    private void createDefaultUserIfNotExits(){
-        Role userRole = roleRepository.findByName("ROLE_USER").get();
-        for (int i = 1; i<=5; i++){
-            String defaultEmail = "sam"+i+"@email.com";
-            if (userRepository.existsByEmail(defaultEmail)){
+        Role userRole = userRoleOpt.get();
+
+        for (int i = 1; i <= 5; i++) {
+            String defaultEmail = "sam" + i + "@email.com";
+            if (userRepository.existsByEmail(defaultEmail)) {
                 continue;
             }
+
             User user = new User();
             user.setFirstName("The User");
             user.setLastName("User" + i);
@@ -47,15 +56,21 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
         }
     }
 
+    private void createDefaultAdminIfNotExits() {
+        Optional<Role> adminRoleOpt = roleRepository.findByName("ROLE_ADMIN");
+        if (adminRoleOpt.isEmpty()) {
+            System.err.println("ROLE_ADMIN not found. Cannot create default admins.");
+            return;
+        }
 
+        Role adminRole = adminRoleOpt.get();
 
-    private void createDefaultAdminIfNotExits(){
-        Role adminRole = roleRepository.findByName("ROLE_ADMIN").get();
-        for (int i = 1; i<=2; i++){
-            String defaultEmail = "admin"+i+"@email.com";
-            if (userRepository.existsByEmail(defaultEmail)){
+        for (int i = 1; i <= 2; i++) {
+            String defaultEmail = "admin" + i + "@email.com";
+            if (userRepository.existsByEmail(defaultEmail)) {
                 continue;
             }
+
             User user = new User();
             user.setFirstName("Admin");
             user.setLastName("Admin" + i);
@@ -66,11 +81,15 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
             System.out.println("Default admin user " + i + " created successfully.");
         }
     }
-    private void createDefaultRoleIfNotExits(Set<String> roles){
+
+    private void createDefaultRoleIfNotExits(Set<String> roles) {
         roles.stream()
                 .filter(role -> roleRepository.findByName(role).isEmpty())
-                .map(Role:: new).forEach(roleRepository::save);
-
+                .forEach(roleName -> {
+                    Role role = new Role();
+                    role.setName(roleName);
+                    roleRepository.save(role);
+                    System.out.println("Role " + roleName + " created.");
+                });
     }
-
 }

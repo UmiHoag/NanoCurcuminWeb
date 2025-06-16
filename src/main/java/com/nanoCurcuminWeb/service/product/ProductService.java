@@ -4,8 +4,6 @@ import com.nanoCurcuminWeb.dto.ImageDto;
 import com.nanoCurcuminWeb.dto.ProductDto;
 import com.nanoCurcuminWeb.exceptions.AlreadyExistsException;
 import com.nanoCurcuminWeb.exceptions.ResourceNotFoundException;
-import com.dailycodework.dreamshops.model.*;
-import com.dailycodework.dreamshops.repository.*;
 import com.nanoCurcuminWeb.model.*;
 import com.nanoCurcuminWeb.repository.*;
 import com.nanoCurcuminWeb.request.AddProductRequest;
