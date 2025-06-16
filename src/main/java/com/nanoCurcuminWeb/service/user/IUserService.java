@@ -1,0 +1,18 @@
+package com.nanoCurcuminWeb.service.user;
+
+import com.nanoCurcuminWeb.dto.UserDto;
+import com.nanoCurcuminWeb.model.User;
+import com.nanoCurcuminWeb.request.CreateUserRequest;
+import com.nanoCurcuminWeb.request.UserUpdateRequest;
+
+public interface IUserService {
+
+    User getUserById(Long userId);
+    User createUser(CreateUserRequest request);
+    User updateUser(UserUpdateRequest request, Long userId);
+    void deleteUser(Long userId);
+
+    UserDto convertUserToDto(User user);
+
+    User getAuthenticatedUser();
+}
