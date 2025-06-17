@@ -10,7 +10,7 @@ public enum CouponType {
     private final String code;
     private final String name;
 
-    CouponType (String code, String name) {
+    CouponType(String code, String name) {
         this.code = code;
         this.name = name;
     }
