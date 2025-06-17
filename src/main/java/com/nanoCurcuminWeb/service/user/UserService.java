@@ -67,6 +67,7 @@ public class UserService implements IUserService {
         return modelMapper.map(user, UserDto.class);
     }
 
+    // Returns user with authenticated roles (Admin role)
     @Override
     public User getAuthenticatedUser() {
         Authentication authentication  = SecurityContextHolder.getContext().getAuthentication();
@@ -74,4 +75,7 @@ public class UserService implements IUserService {
         return userRepository.findByEmail(email);
     }
 
+    private User markAsDeleted(User user) {
+
+    }
 }
