@@ -18,24 +18,24 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ShopUserDetails implements UserDetails {
-       private Long id;
-       private String email;
-       private String password;
+    private Long id;
+    private String email;
+    private String password;
 
-       private Collection<GrantedAuthority> authorities;
+    private Collection<GrantedAuthority> authorities;
 
-       public static ShopUserDetails buildUserDetails(User user) {
-           List<GrantedAuthority> authorities = user.getRoles()
-                   .stream()
-                   .map(role -> new SimpleGrantedAuthority(role.getName()))
-                   .collect(Collectors.toList());
+    public static ShopUserDetails buildUserDetails(User user) {
+        List<GrantedAuthority> authorities = user.getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList());
 
-           return new ShopUserDetails(
-                   user.getId(),
-                   user.getEmail(),
-                   user.getPassword(),
-                   authorities);
-       }
+        return new ShopUserDetails(
+                user.getId(),
+                user.getEmail(),
+                user.getPassword(),
+                authorities);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

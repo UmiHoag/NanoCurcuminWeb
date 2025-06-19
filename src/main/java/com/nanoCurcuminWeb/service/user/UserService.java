@@ -81,7 +81,9 @@ public class UserService implements IUserService {
     public User getAuthenticatedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String email = authentication.getName();
-        return userRepository.findByEmail(email);
+        //User may not match since the user chosen is Optional and not required
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
     }
 
     private User findById(Long userId) {

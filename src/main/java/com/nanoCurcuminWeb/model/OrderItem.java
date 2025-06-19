@@ -1,6 +1,7 @@
 package com.nanoCurcuminWeb.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 public class OrderItem {
@@ -17,7 +19,6 @@ public class OrderItem {
     private Long id;
     private int quantity;
     private BigDecimal price;
-
 
     @ManyToOne
     @JoinColumn(name = "order_id")
