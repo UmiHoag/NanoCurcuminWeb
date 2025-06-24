@@ -3,7 +3,6 @@ package com.nanoCurcuminWeb.service.user;
 import com.nanoCurcuminWeb.dto.UserDto;
 import com.nanoCurcuminWeb.model.User;
 import com.nanoCurcuminWeb.request.CreateUserRequest;
-import com.nanoCurcuminWeb.request.GetAllUsersDetailRequest;
 import com.nanoCurcuminWeb.request.UserUpdateRequest;
 
 import java.util.List;

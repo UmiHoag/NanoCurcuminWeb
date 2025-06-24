@@ -22,3 +22,7 @@ rad.json
 TestResults.xml
 #Ignore these
 src/main/resources/application.properties
+# Node.js (if frontend is included)
+node_modules/
+# IntelliJ IDEA (not needed)
+.idea/

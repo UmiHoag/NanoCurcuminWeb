@@ -8,10 +8,10 @@
 		<version>3.3.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.dailycodework</groupId>
-	<artifactId>dream-shops</artifactId>
+	<groupId>com.nanoCurcuminWeb</groupId>
+	<artifactId>NanoCurcuminTech</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>dream-shops</name>
+	<name>NanoCurcuminTech</name>
 	<description>A simple eCommerce demo app</description>
 	<url/>
 	<licenses>
@@ -93,7 +93,16 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-mail</artifactId>
+		</dependency>
 
+		<dependency>
+			<groupId>com.sun.mail</groupId>
+			<artifactId>javax.mail</artifactId>
+			<version>1.6.2</version>
+		</dependency>
 
 
 

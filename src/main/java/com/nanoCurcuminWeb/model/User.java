@@ -30,6 +30,7 @@ public class User {
     private String phoneNumber;
     private String markAsDeleted;
     private String isAuthenticated;
+    private String verificationToken;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Cart cart;
