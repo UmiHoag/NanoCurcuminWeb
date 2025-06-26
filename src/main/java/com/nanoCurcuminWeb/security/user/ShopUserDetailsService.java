@@ -26,5 +26,4 @@ public class ShopUserDetailsService implements UserDetailsService {
                     .orElseThrow(() -> new UsernameNotFoundException("Username not found: " + identifier));
         }
     }
-
 }

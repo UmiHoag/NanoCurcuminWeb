@@ -10,10 +10,18 @@ import java.util.List;
 public interface IUserService {
 
     List<UserDto> getAllUsers();
+
     User getUserById(Long userId);
+
     User createUser(CreateUserRequest request);
+
     User updateUser(UserUpdateRequest request, Long userId);
+
     void deleteUser(Long userId);
+
+    void sendVerificationEmail(User user);
+
+    void verifyEmail(String token);
 
     UserDto convertUserToDto(User user);
 

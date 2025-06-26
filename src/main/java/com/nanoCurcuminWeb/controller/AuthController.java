@@ -5,6 +5,7 @@ import com.nanoCurcuminWeb.response.ApiResponse;
 import com.nanoCurcuminWeb.response.JwtResponse;
 import com.nanoCurcuminWeb.security.jwt.JwtUtils;
 import com.nanoCurcuminWeb.security.user.ShopUserDetails;
+import com.nanoCurcuminWeb.service.user.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,15 +15,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("${api.prefix}/auth")
 public class AuthController {
+    private final UserService userService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
@@ -44,6 +43,15 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(new ApiResponse(e.getMessage(), null));
         }
+    }
 
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyEmail(@RequestParam("token") String token) {
+        try {
+            userService.verifyEmail(token);
+            return ResponseEntity.ok("Email verified successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Email verification failed: " + e.getMessage());
+        }
     }
 }
