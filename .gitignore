@@ -26,3 +26,4 @@ src/main/resources/application.properties
 node_modules/
 # IntelliJ IDEA (not needed)
 .idea/
+**/.idea/
