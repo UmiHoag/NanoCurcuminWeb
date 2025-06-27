@@ -27,3 +27,5 @@ node_modules/
 # IntelliJ IDEA (not needed)
 .idea/
 **/.idea/
+# Visual Studio Code Classes
+.target/
