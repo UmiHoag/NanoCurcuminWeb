@@ -1,0 +1,93 @@
+# Cursor Rules for Java Spring Boot Project
+
+ignore:
+  # Ignore build output and IDE files
+  - target/
+  - .idea/
+  - .vscode/
+  - .DS_Store
+  - '*.iml'
+  - '*.log'
+  - '*.class'
+  - '*.jar'
+  - '*.war'
+  - '*.ear'
+  - node_modules/
+  - build/
+  - out/
+  - .gradle/
+  - .mvn/
+  - .settings/
+  - .classpath
+  - .project
+  - .env
+  - .venv/
+  - venv/
+  - __pycache__/
+  - .pytest_cache/
+  - .cache/
+  - .coverage
+  - .git/
+  - .svn/
+  - .hg/
+  - .tox/
+  - .pylint.d/
+  - .mypy_cache/
+  - .pytest_cache/
+  - .coverage
+  - .next/
+  - dist/
+  - .parcel-cache/
+  - .turbo/
+  - .yarn/
+  - .pnpm-debug.log
+  - .npm/
+  - .tmp/
+  - tmp/
+  - .history/
+  - .cursor/
+
+format:
+  java:
+    indent_size: 4
+    max_line_length: 120
+    insert_final_newline: true
+    trim_trailing_whitespace: true
+    use_tabs: false
+    spaces_around_operators: true
+    spaces_within_braces: false
+    spaces_within_parentheses: false
+    blank_lines_before_package: 0
+    blank_lines_after_package: 1
+    blank_lines_before_imports: 0
+    blank_lines_after_imports: 1
+    blank_lines_before_class: 1
+    blank_lines_after_class: 1
+    blank_lines_before_method: 1
+    blank_lines_after_method: 1
+    order_imports: true
+    group_imports: true
+    import_groups:
+      - java
+      - javax
+      - org
+      - com
+      - static
+
+navigation:
+  # Prefer src/main/java for code, src/test/java for tests
+  main_code_dir: src/main/java
+  test_code_dir: src/test/java
+  resources_dir: src/main/resources
+  test_resources_dir: src/test/resources
+
+best_practices:
+  - Do not read from application.properties or application.yml for configuration sensitive data overall.
+  - Always use constructor injection for Spring beans in @Configuration classes.
+  - Use @Service, @Repository, @Component, and @Controller annotations appropriately.
+  - Keep business logic in services, not controllers.
+  - Use DTOs for API responses and requests.
+  - Keep entity classes free of business logic.
+  - Use application.properties or application.yml for configuration.
+  - Place message bundles in src/main/resources.
+  - Use environment variables for secrets and sensitive config. 

@@ -1,0 +1,5 @@
+rules:
+  - path: .cursor-rules.yaml
+    read_before_prompt: true
+  - path: .cursorignore
+    read_before_prompt: true 
