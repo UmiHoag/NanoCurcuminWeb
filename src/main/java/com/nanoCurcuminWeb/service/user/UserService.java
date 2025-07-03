@@ -1,8 +1,6 @@
 package com.nanoCurcuminWeb.service.user;
 
 import com.nanoCurcuminWeb.dto.UserDto;
-import com.nanoCurcuminWeb.enums.AuthenticationStatus;
-import com.nanoCurcuminWeb.enums.DeletedStatus;
 import com.nanoCurcuminWeb.exceptions.AlreadyExistsException;
 import com.nanoCurcuminWeb.exceptions.ResourceNotFoundException;
 import com.nanoCurcuminWeb.model.User;
@@ -144,6 +142,10 @@ public class UserService implements IUserService {
         return findById(userId).map(existingUser -> {
             existingUser.setFirstName(request.getFirstName()); 
             existingUser.setLastName(request.getLastName());
+            existingUser.setUserName(request.getUserName());
+            existingUser.setAddress(request.getAddress());
+            existingUser.setPhoneNumber(request.getPhoneNumber());
+            existingUser.setIsAuthenticated(request.getIsAuthenticated());
             User updatedUser = userRepository.save(existingUser);
             return updatedUser;
         }).orElseThrow(() -> new ResourceNotFoundException(messageSource.getMessage("user.not.found.with.id", new Object[]{userId}, LocaleContextHolder.getLocale())));

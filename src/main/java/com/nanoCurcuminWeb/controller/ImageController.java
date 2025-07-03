@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -41,19 +42,18 @@ public class ImageController {
 
     }
 
-    @GetMapping("/image/download/{imageId}")
-    public ResponseEntity<Resource> downloadImage(@PathVariable Long imageId) throws SQLException {
+    @PostMapping("/image/download")
+    public ResponseEntity<Resource> downloadImage(@RequestBody Map<String, Long> body) throws SQLException {
+        Long imageId = body.get("imageId");
         Image image = imageService.getImageById(imageId);
-        // For now, return a placeholder response since we removed the Blob field
-        // In a real implementation, you would read the file from the filePath
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(image.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + image.getFileName() + "\"")
                 .body(new ByteArrayResource("Image data not available".getBytes()));
     }
 
-    @PutMapping("/image/{imageId}/update")
-    public ResponseEntity<ApiResponse> updateImage(@PathVariable Long imageId, @RequestBody MultipartFile file) {
+    @PostMapping("/image/update")
+    public ResponseEntity<ApiResponse> updateImage(@RequestParam Long imageId, @RequestParam MultipartFile file) {
         try {
             Image image = imageService.getImageById(imageId);
             if(image != null) {
@@ -66,10 +66,10 @@ public class ImageController {
         return ResponseEntity.status(INTERNAL_SERVER_ERROR).body(new ApiResponse("Update failed!", INTERNAL_SERVER_ERROR));
     }
 
-
-    @DeleteMapping("/image/{imageId}/delete")
-    public ResponseEntity<ApiResponse> deleteImage(@PathVariable Long imageId) {
+    @PostMapping("/image/delete")
+    public ResponseEntity<ApiResponse> deleteImage(@RequestBody Map<String, Long> body) {
         try {
+            Long imageId = body.get("imageId");
             Image image = imageService.getImageById(imageId);
             if(image != null) {
                 imageService.deleteImageById( imageId);

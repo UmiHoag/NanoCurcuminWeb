@@ -9,6 +9,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.lang.NonNull;
 
 import java.util.Optional;
 import java.util.Set;
@@ -22,7 +23,7 @@ public class DataInitializer implements ApplicationListener<ApplicationReadyEven
     private final PasswordEncoder passwordEncoder;
 
     @Override
-    public void onApplicationEvent(ApplicationReadyEvent event) {
+    public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
         Set<String> defaultRoles = Set.of("ROLE_ADMIN", "ROLE_USER");
 
         createDefaultRoleIfNotExits(defaultRoles);

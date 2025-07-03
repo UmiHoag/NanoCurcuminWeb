@@ -1,11 +1,13 @@
 package com.nanoCurcuminWeb.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.nanoCurcuminWeb.model.Category;
 import lombok.Data;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Data
 public class ProductDto {
     private Long id;

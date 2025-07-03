@@ -4,6 +4,7 @@ package com.nanoCurcuminWeb.controller;
 import com.nanoCurcuminWeb.dto.ProductDto;
 import com.nanoCurcuminWeb.exceptions.AlreadyExistsException;
 import com.nanoCurcuminWeb.exceptions.ResourceNotFoundException;
+import com.nanoCurcuminWeb.model.Category;
 import com.nanoCurcuminWeb.model.Product;
 import com.nanoCurcuminWeb.request.AddProductRequest;
 import com.nanoCurcuminWeb.request.ProductUpdateRequest;
@@ -15,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -31,9 +33,10 @@ public class ProductController {
         return  ResponseEntity.ok(new ApiResponse("success", convertedProducts));
     }
 
-    @GetMapping("/product/{productId}/product")
-    public ResponseEntity<ApiResponse> getProductById(@PathVariable Long productId) {
+    @PostMapping("/product")
+    public ResponseEntity<ApiResponse> getProductById(@RequestBody Map<String, Long> body) {
         try {
+            Long productId = body.get("productId");
             Product product = productService.getProductById(productId);
             ProductDto productDto = productService.convertToDto(product);
             return  ResponseEntity.ok(new ApiResponse("success", productDto));
@@ -53,10 +56,20 @@ public class ProductController {
             return ResponseEntity.status(CONFLICT).body(new ApiResponse(e.getMessage(), null));
         }
     }
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @PutMapping("/product/{productId}/update")
-    public  ResponseEntity<ApiResponse> updateProduct(@RequestBody ProductUpdateRequest request, @PathVariable Long productId) {
+
+    @PostMapping("/product/update")
+    public  ResponseEntity<ApiResponse> updateProduct(@RequestBody Map<String, Object> body) {
         try {
+            Long productId = Long.valueOf(body.get("productId").toString());
+            ProductUpdateRequest request = new ProductUpdateRequest();
+            request.setName((String) body.get("name"));
+            request.setBrand((String) body.get("brand"));
+            request.setPrice(new java.math.BigDecimal(body.get("price").toString()));
+            request.setInventory(Integer.parseInt(body.get("inventory").toString()));
+            request.setDescription((String) body.get("description"));
+            Category categoryObj = new Category();
+            categoryObj.setId(Long.valueOf(body.get("categoryId").toString()));
+            request.setCategory(categoryObj);
             Product theProduct = productService.updateProduct(request, productId);
             ProductDto productDto = productService.convertToDto(theProduct);
             return ResponseEntity.ok(new ApiResponse("Update product success!", productDto));
@@ -65,10 +78,10 @@ public class ProductController {
         }
     }
 
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @DeleteMapping("/product/{productId}/delete")
-    public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long productId) {
+    @PostMapping("/product/delete")
+    public ResponseEntity<ApiResponse> deleteProduct(@RequestBody Map<String, Long> body) {
         try {
+            Long productId = body.get("productId");
             productService.deleteProductById(productId);
             return ResponseEntity.ok(new ApiResponse("Delete product success!", productId));
         } catch (ResourceNotFoundException e) {
@@ -104,9 +117,10 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/products/{name}/products")
-    public ResponseEntity<ApiResponse> getProductByName(@PathVariable String name){
+    @PostMapping("/products/by-name")
+    public ResponseEntity<ApiResponse> getProductByName(@RequestBody Map<String, String> body){
         try {
+            String name = body.get("name");
             List<Product> products = productService.getProductsByName(name);
             if (products.isEmpty()) {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found ", null));
@@ -132,9 +146,10 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/product/{category}/all/products")
-    public ResponseEntity<ApiResponse> findProductsByCategory(@PathVariable String category) {
+    @PostMapping("/products/by-category")
+    public ResponseEntity<ApiResponse> findProductsByCategory(@RequestBody Map<String, String> body) {
         try {
+            String category = body.get("category");
             List<Product> products = productService.getProductsByCategory(category);
             if (products.isEmpty()) {
                 return ResponseEntity.status(NOT_FOUND).body(new ApiResponse("No products found ", null));

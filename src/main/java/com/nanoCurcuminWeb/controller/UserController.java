@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.CONFLICT;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -30,9 +31,10 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/{userId}/user")
-    public ResponseEntity<ApiResponse> getUserById(@PathVariable Long userId) {
+    @PostMapping("/user")
+    public ResponseEntity<ApiResponse> getUserById(@RequestBody Map<String, Long> body) {
         try {
+            Long userId = body.get("userId");
             User user = userService.getUserById(userId);
             UserDto userDto = userService.convertUserToDto(user);
             return ResponseEntity.ok(new ApiResponse("Success", userDto));
@@ -54,24 +56,36 @@ public class UserController {
             e.printStackTrace();
             // Return a user-friendly error message
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new ApiResponse("User created, but an error occurred: " + e.getMessage(), null));
+                    .body(new ApiResponse("An error occurred: " + e.getMessage(), null));
         }
     }
 
-    @PutMapping("/{userId}/update")
-    public ResponseEntity<ApiResponse> updateUser(@RequestBody UserUpdateRequest request, @PathVariable Long userId) {
+    @PostMapping("/update")
+    public ResponseEntity<ApiResponse> updateUser(@RequestBody Map<String, Object> body) {
         try {
-            User user = userService.updateUser(request, userId);
-            UserDto userDto = userService.convertUserToDto(user);
+            Long userId = Long.valueOf(body.get("userId").toString());
+            User user = userService.getUserById(userId); // Fetch existing user
+
+            UserUpdateRequest request = new UserUpdateRequest();
+            request.setFirstName(body.get("firstName") != null ? (String) body.get("firstName") : user.getFirstName());
+            request.setLastName(body.get("lastName") != null ? (String) body.get("lastName") : user.getLastName());
+            request.setUserName(body.get("userName") != null ? (String) body.get("userName") : user.getUserName());
+            request.setAddress(body.get("address") != null ? (String) body.get("address") : user.getAddress());
+            request.setPhoneNumber(body.get("phoneNumber") != null ? (String) body.get("phoneNumber") : user.getPhoneNumber());
+            request.setIsAuthenticated(body.get("isAuthenticated") != null ? (Boolean) body.get("isAuthenticated") : user.getIsAuthenticated());
+
+            User updatedUser = userService.updateUser(request, userId);
+            UserDto userDto = userService.convertUserToDto(updatedUser);
             return ResponseEntity.ok(new ApiResponse("Update User Success!", userDto));
         } catch (ResourceNotFoundException e) {
             return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
-    @PutMapping("/{userId}/delete")
-    public ResponseEntity<ApiResponse> softlyDeleteUser(@PathVariable Long userId) {
+    @PostMapping("/soft-delete")
+    public ResponseEntity<ApiResponse> softlyDeleteUser(@RequestBody Map<String, Long> body) {
         try {
+            Long userId = body.get("userId");
             userService.deleteUser(userId);
             return ResponseEntity.ok(new ApiResponse("Delete User Success!", null));
         } catch (ResourceNotFoundException e) {
@@ -79,9 +93,10 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/{userId}/delete")
-    public ResponseEntity<ApiResponse> deleteUser(@PathVariable Long userId) {
+    @PostMapping("/delete")
+    public ResponseEntity<ApiResponse> deleteUser(@RequestBody Map<String, Long> body) {
         try {
+            Long userId = body.get("userId");
             userService.deleteUser(userId);
             return ResponseEntity.ok(new ApiResponse("Delete User Success!", null));
         } catch (ResourceNotFoundException e) {

@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @RestController
@@ -19,8 +20,9 @@ public class OrderController {
     private final IOrderService orderService;
 
     @PostMapping("/user/place-order")
-    public ResponseEntity<ApiResponse> createOrder(@RequestParam Long userId) {
+    public ResponseEntity<ApiResponse> createOrder(@RequestBody Map<String, Long> body) {
         try {
+            Long userId = body.get("userId");
             Order order =  orderService.placeOrder(userId);
             OrderDto orderDto =  orderService.convertToDto(order);
             return ResponseEntity.ok(new ApiResponse("Items Order Success!", orderDto));
@@ -29,9 +31,10 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/{orderId}/order")
-    public ResponseEntity<ApiResponse> getOrderById(@PathVariable Long orderId) {
+    @PostMapping("/order")
+    public ResponseEntity<ApiResponse> getOrderById(@RequestBody Map<String, Long> body) {
         try {
+            Long orderId = body.get("orderId");
             OrderDto order = orderService.getOrder(orderId);
             return ResponseEntity.ok(new ApiResponse("Item Order Success!", order));
         } catch (ResourceNotFoundException e) {
@@ -39,9 +42,10 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/user/{userId}/order")
-    public ResponseEntity<ApiResponse> getUserOrders(@PathVariable Long userId) {
+    @PostMapping("/user/orders")
+    public ResponseEntity<ApiResponse> getUserOrders(@RequestBody Map<String, Long> body) {
         try {
+            Long userId = body.get("userId");
             List<OrderDto> order = orderService.getUserOrders(userId);
             return ResponseEntity.ok(new ApiResponse("Item Order Success!", order));
         } catch (ResourceNotFoundException e) {

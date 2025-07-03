@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
@@ -30,9 +31,10 @@ public class CartController {
         }
     }*/
 
-    @GetMapping("/user/{userId}/my-cart")
-    public ResponseEntity<ApiResponse> getUserCart( @PathVariable Long userId) {
+    @PostMapping("/user/my-cart")
+    public ResponseEntity<ApiResponse> getUserCart(@RequestBody Map<String, Long> body) {
         try {
+            Long userId = body.get("userId");
             Cart cart = cartService.getCartByUserId(userId);
             CartDto cartDto = cartService.convertToDto(cart);
             return ResponseEntity.ok(new ApiResponse("Success", cartDto));
@@ -41,19 +43,21 @@ public class CartController {
         }
     }
 
-    @DeleteMapping("/{cartId}/clear")
-    public ResponseEntity<ApiResponse> clearCart( @PathVariable Long cartId) {
+    @PostMapping("/clear")
+    public ResponseEntity<ApiResponse> clearCart(@RequestBody Map<String, Long> body) {
         try {
+            Long cartId = body.get("cartId");
             cartService.clearCart(cartId);
             return ResponseEntity.ok(new ApiResponse("Clear Cart Success!", null));
         } catch (ResourceNotFoundException e) {
-          return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
+            return ResponseEntity.status(NOT_FOUND).body(new ApiResponse(e.getMessage(), null));
         }
     }
 
-    @GetMapping("/{cartId}/cart/total-price")
-    public ResponseEntity<ApiResponse> getTotalAmount( @PathVariable Long cartId) {
+    @PostMapping("/cart/total-price")
+    public ResponseEntity<ApiResponse> getTotalAmount(@RequestBody Map<String, Long> body) {
         try {
+            Long cartId = body.get("cartId");
             BigDecimal totalPrice = cartService.getTotalPrice(cartId);
             return ResponseEntity.ok(new ApiResponse("Total Price", totalPrice));
         } catch (ResourceNotFoundException e) {

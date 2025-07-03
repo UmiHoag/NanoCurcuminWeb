@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.http.HttpStatus.*;
 
@@ -40,9 +41,10 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/category/{id}/category")
-    public ResponseEntity<ApiResponse> getCategoryById(@PathVariable Long id){
+    @PostMapping("/category/by-id")
+    public ResponseEntity<ApiResponse> getCategoryById(@RequestBody Map<String, Long> body){
         try {
+            Long id = body.get("id");
             Category theCategory = categoryService.getCategoryById(id);
             return  ResponseEntity.ok(new ApiResponse("Found", theCategory));
         } catch (ResourceNotFoundException e) {
@@ -50,9 +52,10 @@ public class CategoryController {
         }
     }
 
-    @GetMapping("/category/{name}/category")
-    public ResponseEntity<ApiResponse> getCategoryByName(@PathVariable String name){
+    @PostMapping("/category/by-name")
+    public ResponseEntity<ApiResponse> getCategoryByName(@RequestBody Map<String, String> body){
         try {
+            String name = body.get("name");
             Category theCategory = categoryService.getCategoryByName(name);
             return  ResponseEntity.ok(new ApiResponse("Found", theCategory));
         } catch (ResourceNotFoundException e) {
@@ -60,10 +63,10 @@ public class CategoryController {
         }
     }
 
-
-    @DeleteMapping("/category/{id}/delete")
-    public ResponseEntity<ApiResponse> deleteCategory(@PathVariable Long id){
+    @PostMapping("/category/delete")
+    public ResponseEntity<ApiResponse> deleteCategory(@RequestBody Map<String, Long> body){
         try {
+            Long id = body.get("id");
             categoryService.deleteCategoryById(id);
             return  ResponseEntity.ok(new ApiResponse("Found", null));
         } catch (ResourceNotFoundException e) {
@@ -71,9 +74,13 @@ public class CategoryController {
         }
     }
 
-    @PutMapping("/category/{id}/update")
-    public ResponseEntity<ApiResponse> updateCategory(@PathVariable Long id, @RequestBody Category category) {
+    @PostMapping("/category/update")
+    public ResponseEntity<ApiResponse> updateCategory(@RequestBody Map<String, Object> body) {
         try {
+            Long id = Long.valueOf(body.get("id").toString());
+            Category category = new Category();
+            category.setName((String) body.get("name"));
+            category.setDescription((String) body.get("description"));
             Category updatedCategory = categoryService.updateCategory(category, id);
             return ResponseEntity.ok(new ApiResponse("Update success!", updatedCategory));
         } catch (ResourceNotFoundException e) {
